@@ -68,7 +68,7 @@ export function PostForm({ post, user_id }: PostFormProps) {
         if (response.error?.code === INSUFFICIENT_PRIVILEGE_ERROR_CODE) {
           toast.error("You are not authorized to create a post");
         } else {
-          toast.error("Something went wrong");
+          toast.error("Unable to upsert post please try again later");
         }
       }
     } finally {
