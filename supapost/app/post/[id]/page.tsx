@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import { CommentSection } from "@/components/comment-section";
+import DeletePostButton from "@/components/delete-post-button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createClient } from "@/utils/supabase/server";
+import { Pencil } from "lucide-react";
 
 async function PostDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -43,7 +45,18 @@ async function PostDetails({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="px-5 mx-auto py-8 max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">{post.title}</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">{post.title}</h1>
+
+          <div className="flex gap-2">
+            <Button asChild variant="outline" size="icon">
+              <Link href={`/admin/edit/${post.id}`}>
+                <Pencil className="h-4 w-4" />
+              </Link>
+            </Button>
+            <DeletePostButton id={post.id} />
+          </div>
+        </div>
         <div className="text-sm text-muted-foreground">
           {new Date(post.created_at).toLocaleDateString("en-US", {
             year: "numeric",

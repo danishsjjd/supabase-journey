@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import { toast } from "sonner";
 
 type CommentFormProps = {
   postId: number;
@@ -30,20 +31,36 @@ export function CommentForm({ postId, user, comment }: CommentFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!content.trim() || !user) return;
+    if (!content.trim()) return;
 
     setIsSubmitting(true);
 
     try {
+      let result;
       if (mode === "edit" && comment) {
-        await updateComment(comment.id, content, postId);
+        result = await updateComment(comment.id, content, postId);
       } else {
-        await createComment(content, postId, user.id);
+        result = await createComment(
+          content,
+          postId,
+          user?.id ?? "69a037de-5777-4d39-bc7d-4488889a7b3e"
+        );
       }
+
+      if ("error" in result) {
+        toast.error(result.error);
+        return;
+      }
+
       setContent("");
       setDialogOpen(false);
-    } catch (error) {
-      console.error(`Failed to ${mode} comment:`, error);
+      toast.success(
+        mode === "edit"
+          ? "Comment updated successfully!"
+          : "Comment posted successfully!"
+      );
+    } catch (_) {
+      toast.error("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -52,12 +69,11 @@ export function CommentForm({ postId, user, comment }: CommentFormProps) {
   const formContent = (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Textarea
-        placeholder={user ? "Write a comment..." : "Please sign in to comment"}
+        placeholder={"Write a comment..."}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="min-h-[100px]"
         required
-        disabled={!user}
       />
       <div className="flex justify-end gap-2">
         {mode === "edit" && (
@@ -70,10 +86,7 @@ export function CommentForm({ postId, user, comment }: CommentFormProps) {
             Cancel
           </Button>
         )}
-        <Button
-          type="submit"
-          disabled={isSubmitting || !content.trim() || !user}
-        >
+        <Button type="submit" disabled={isSubmitting || !content.trim()}>
           {isSubmitting
             ? mode === "edit"
               ? "Updating..."

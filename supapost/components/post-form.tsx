@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/utils/supabase/database.types";
 import { toast } from "sonner";
+import { INSUFFICIENT_PRIVILEGE_ERROR_CODE } from "@/lib/data";
 
 interface PostFormProps {
   post?: Tables<"posts"> & { user: Tables<"users"> };
@@ -64,8 +65,11 @@ export function PostForm({ post, user_id }: PostFormProps) {
       if (createdPost) {
         router.push(`/post/${createdPost.id}`);
       } else {
-        toast.error("Something went wrong");
-        console.error(response);
+        if (response.error?.code === INSUFFICIENT_PRIVILEGE_ERROR_CODE) {
+          toast.error("You are not authorized to create a post");
+        } else {
+          toast.error("Something went wrong");
+        }
       }
     } finally {
       setLoading(false);

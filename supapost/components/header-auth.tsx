@@ -9,7 +9,12 @@ export default async function AuthButton() {
   return user ? (
     <div className="flex items-center gap-4">
       <span>Hey, {user.email}!</span>
-      <form action={signOutAction}>
+      <form
+        action={async () => {
+          "use server";
+          await signOutAction();
+        }}
+      >
         <Button type="submit" variant={"outline"}>
           Sign out
         </Button>

@@ -17,8 +17,7 @@ export const signInWithDiscordAction = async () => {
   });
 
   if (error) {
-    console.error("Discord sign in error:", error.message);
-    return encodedRedirect("error", "/sign-in", error.message);
+    return { error: error.message };
   }
 
   return redirect(data.url);
@@ -26,6 +25,11 @@ export const signInWithDiscordAction = async () => {
 
 export const signOutAction = async () => {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return { error: error.message };
+  }
+
   return redirect("/");
 };

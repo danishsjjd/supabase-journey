@@ -1,12 +1,10 @@
-import { deleteComment } from "@/actions/comments";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tables } from "@/utils/supabase/database.types";
-import { getUser } from "@/utils/supabase/server";
-import { createClient } from "@/utils/supabase/server";
+import { createClient, getUser } from "@/utils/supabase/server";
 import { CommentForm } from "./comment-form";
+import DeleteCommentButton from "./delete-comment-button";
 
 type Comment = Tables<"comments"> & { user: Tables<"users"> };
 
@@ -73,16 +71,7 @@ export async function CommentSection({ postId }: { postId: number }) {
                     </span>
 
                     <div className="ml-auto flex gap-2">
-                      <form
-                        action={async () => {
-                          "use server";
-                          await deleteComment(comment.id, postId);
-                        }}
-                      >
-                        <Button variant="destructive" size="sm">
-                          Delete
-                        </Button>
-                      </form>
+                      <DeleteCommentButton id={comment.id} postId={postId} />
                       <CommentForm
                         postId={postId}
                         user={user}
