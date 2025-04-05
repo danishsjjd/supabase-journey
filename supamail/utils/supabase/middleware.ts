@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-export const updateSession = async (request: NextRequest) => {
-  let response = NextResponse.next({
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
     request,
   });
 
@@ -18,29 +18,27 @@ export const updateSession = async (request: NextRequest) => {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          response = NextResponse.next({
+          supabaseResponse = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
-  // This will refresh session if expired - required for Server Components
-  // https://supabase.com/docs/guides/auth/server-side/nextjs
+  // refreshing the auth token
   const user = await supabase.auth.getUser();
 
-  // protected routes
-  if (request.nextUrl.pathname.startsWith("/admin") && user.error) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  if (request.nextUrl.pathname === "/" && user.error) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (request.nextUrl.pathname === "/sign-in" && !user.error) {
+  if (request.nextUrl.pathname === "/login" && !user.error) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return response;
-};
+  return supabaseResponse;
+}

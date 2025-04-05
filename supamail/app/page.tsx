@@ -22,6 +22,7 @@ import {
   StarOff,
   FolderPlus,
   Send,
+  LogOut,
 } from "lucide-react";
 
 // Mock data for emails
@@ -217,26 +218,23 @@ export default function EmailManagement() {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Left Column - Navigation */}
       <div className="w-64 border-r bg-muted/20 p-4 flex flex-col">
-        <div className="mb-6">
-          <Button
-            className="w-full mb-4"
-            onClick={() => setIsComposeOpen(true)}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" /> Compose
-          </Button>
-
-          <div className="relative mb-4">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search emails..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        <div className="flex items-center justify-between mb-2">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
+            <AvatarFallback>U</AvatarFallback>
+          </Avatar>
+          <form method="post" action="/auth/signout">
+            <Button variant="ghost" size="sm" type="submit">
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign out
+            </Button>
+          </form>
         </div>
+
+        <Button className="w-full mb-4" onClick={() => setIsComposeOpen(true)}>
+          <PlusCircle className="mr-2 h-4 w-4" /> Compose
+        </Button>
 
         <Tabs
           defaultValue="inbox"
