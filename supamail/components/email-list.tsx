@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useApp } from "@/context/use-app";
-import { cn, dateIOSFormat } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const EmailList = () => {
   const { emails, setSelectedEmail, selectedEmail } = useApp();
@@ -50,14 +50,11 @@ const EmailList = () => {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {new Date(dateIOSFormat(email.created_at)).toLocaleString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      }
-                    )}
+                    {new Date(email.created_at).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
                   </p>
                 </div>
               );

@@ -41,7 +41,7 @@ const AppProvider = ({
     <AppContext.Provider
       value={{ emails, folders, selectedEmail, setSelectedEmail, user }}
     >
-      {children}
+      <div className="flex h-screen bg-background">{children}</div>
     </AppContext.Provider>
   );
 };

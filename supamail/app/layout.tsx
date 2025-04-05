@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="flex h-screen bg-background">
+        <main>
           <NuqsAdapter>{children}</NuqsAdapter>
         </main>
       </body>
