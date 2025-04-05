@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/context/use-app";
+import { dateIOSFormat } from "@/lib/utils";
 import { Star, StarOff, Trash2 } from "lucide-react";
 
 const EmailDetails = () => {
@@ -62,16 +63,16 @@ const EmailDetails = () => {
                       .join(", ")}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(selectedEmail.email.created_at).toLocaleString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }
-                  )}
+                  {new Date(
+                    dateIOSFormat(selectedEmail.email.created_at)
+                  ).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZoneName: "short",
+                  })}
                 </p>
               </div>
             </div>
