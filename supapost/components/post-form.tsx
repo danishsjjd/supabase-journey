@@ -57,6 +57,7 @@ export function PostForm({ post, user_id }: PostFormProps) {
                 title: formData.title,
                 content: formData.content,
                 is_published: formData.is_published,
+                // TODO: add logic so user cannot edit created_at
                 created_at: new Date().toISOString(),
                 user_id,
               })
