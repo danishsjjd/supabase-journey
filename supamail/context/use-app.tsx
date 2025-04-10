@@ -1,5 +1,5 @@
-import { Tables } from "@/utils/supabase/database.types";
-import { User } from "@supabase/supabase-js";
+import type { Tables } from "@/utils/supabase/database.types";
+import type { User } from "@supabase/supabase-js";
 import { useQueryState } from "nuqs";
 import { createContext, useContext } from "react";
 

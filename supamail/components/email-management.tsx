@@ -2,11 +2,11 @@
 
 import { AppProvider } from "@/context/use-app";
 
-import { Email } from "@/context/use-app";
-import { Tables } from "@/utils/supabase/database.types";
-import { User } from "@supabase/supabase-js";
-import EmailList from "./email-list";
+import type { Email } from "@/context/use-app";
+import type { Tables } from "@/utils/supabase/database.types";
+import type { User } from "@supabase/supabase-js";
 import EmailDetails from "./email-details";
+import EmailList from "./email-list";
 import SidebarNavigation from "./sidebar-navigation";
 export default function EmailManagement({
   emails,

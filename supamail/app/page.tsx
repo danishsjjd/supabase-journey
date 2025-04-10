@@ -17,7 +17,7 @@ const Page = async () => {
   const { data: emails, error: emailsError } = await supabase
     .from("email_status")
     .select(
-      "*, folder:folder_id(*), email:emails!email_status_email_id_fkey(*, sender:sender_profile_id(*), recipients:email_recipients(*, profile:recipient_profile_id(*)))"
+      "*, folder:folder_id(*), email:emails!email_status_email_id_fkey(*, sender:sender_profile_id(*), recipients:email_recipients(*, profile:recipient_profile_id(*)))",
     );
 
   if (!emails || !folders || !user.user) {

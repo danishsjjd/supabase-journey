@@ -22,15 +22,14 @@ const EmailList = () => {
         {emails.length > 0 ? (
           <div className="divide-y">
             {emails.map((emailStatus) => {
-              const { email, email_id, folder, is_read, profile_id } =
-                emailStatus;
+              const { email, email_id } = emailStatus;
 
               return (
                 <div
                   key={email_id}
                   className={cn(
                     "p-4 cursor-pointer transition-colors hover:bg-muted/50 flex items-start justify-between mb-1",
-                    selectedEmail?.email_id === email_id && "bg-muted/50"
+                    selectedEmail?.email_id === email_id && "bg-muted/50",
                   )}
                   onClick={() => setSelectedEmail(emailStatus.email_id)}
                 >

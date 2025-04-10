@@ -6,13 +6,17 @@ import { useApp } from "@/context/use-app";
 import { Star, StarOff, Trash2 } from "lucide-react";
 
 const EmailDetails = () => {
-  const { selectedEmail, folders, setSelectedEmail } = useApp();
+  const { selectedEmail } = useApp();
 
   //   TODO: handleDeleteEmail
-  const handleDeleteEmail = (emailId: string) => {};
+  const handleDeleteEmail = (emailId: string) => {
+    console.log(emailId);
+  };
 
   //   TODO: handleToggleStar
-  const handleToggleStar = (emailId: string) => {};
+  const handleToggleStar = (emailId: string) => {
+    console.log(emailId);
+  };
 
   return (
     <div className="flex-1 flex flex-col">
@@ -56,10 +60,9 @@ const EmailDetails = () => {
                   {selectedEmail.email.sender.email_address}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {"To: " +
-                    selectedEmail.email.recipients
-                      .map((recipient) => recipient.profile.email_address)
-                      .join(", ")}
+                  {`To: ${selectedEmail.email.recipients
+                    .map((recipient) => recipient.profile.email_address)
+                    .join(", ")}`}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {new Date(selectedEmail.email.created_at).toLocaleString(
@@ -71,22 +74,14 @@ const EmailDetails = () => {
                       hour: "2-digit",
                       minute: "2-digit",
                       timeZoneName: "short",
-                    }
+                    },
                   )}
                 </p>
               </div>
             </div>
 
             <div className="mb-4">
-              <div className="text-sm">
-                {selectedEmail.email.body
-                  .split("\n")
-                  .map((line: string, i: number) => (
-                    <p key={i} className="mb-2">
-                      {line}
-                    </p>
-                  ))}
-              </div>
+              <div className="text-sm">{selectedEmail.email.body}</div>
             </div>
           </div>
 
