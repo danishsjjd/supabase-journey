@@ -14,6 +14,7 @@ declare
   recipient_id uuid;
   recipient_email text;
   sender_email text;
+  unique_recipient_emails text[];
 begin
   -- Get the current user's ID (sender)
   sender_id := auth.uid();
@@ -21,16 +22,20 @@ begin
   if sender_id is null then
     raise exception 'User not authenticated';
   end if;
+  
+  -- Remove duplicates from recipient_emails
+  unique_recipient_emails := ARRAY(SELECT DISTINCT UNNEST(recipient_emails));
+
+  -- Check if recipient_emails is empty
+  if array_length(unique_recipient_emails, 1) is null then
+    raise exception 'Recipient emails cannot be empty';
+  end if;
 
   -- Get sender's email
   select email_address into sender_email
   from profiles
   where id = sender_id;
 
-  -- Check if recipient_emails is empty
-  if array_length(recipient_emails, 1) is null then
-    raise exception 'Recipient emails cannot be empty';
-  end if;
   
   -- Start transaction
   begin
@@ -40,7 +45,7 @@ begin
     returning id into new_email_id;
     
     -- Add recipients
-    foreach recipient_email in array recipient_emails
+    foreach recipient_email in array unique_recipient_emails
     loop
       -- Find or create recipient profile
       select id into recipient_id
@@ -55,16 +60,18 @@ begin
       insert into email_recipients (email_id, recipient_profile_id)
       values (new_email_id, recipient_id);
       
+      if sender_id = recipient_id then
+        continue;
+      end if;
+      
       -- Add to email_status for the recipient
       insert into email_status (email_id, profile_id, is_read, folder_id)
       values (new_email_id, recipient_id, false, null);
     end loop;
     
-    -- Add to email_status for the sender only if sender's email is not in recipients
-    if not (sender_email = any(recipient_emails)) then
+    -- Add to email_status for the sender
       insert into email_status (email_id, profile_id, is_read, folder_id)
       values (new_email_id, sender_id, true, null);
-    end if;
     
     -- Commit transaction
     return new_email_id;
@@ -106,8 +113,11 @@ begin
     returning id into new_email_id;
     
     -- Notify the sender that they have a new email
-    insert into email_status (updated_at)
-    values (now());
+    update email_status
+    set is_read = false
+    where email_id = original_email_id
+    and profile_id = sender_id
+    and deleted_at is null;
     
     -- Create the email_replies relationship
     insert into email_replies (email_id, reply_email_id)
