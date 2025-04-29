@@ -7,13 +7,9 @@ import { toast } from "sonner";
 
 const SignInWithDiscordButton = () => {
   const handleSignIn = async () => {
-    try {
-      const result = await signInWithDiscordAction();
-      if ("error" in result) {
-        toast.error(result.error);
-      }
-    } catch (_) {
-      toast.error("An unexpected error occurred");
+    const result = await signInWithDiscordAction();
+    if ("error" in result) {
+      toast.error(result.error);
     }
   };
 

@@ -19,7 +19,8 @@ const DeleteCommentButton = ({
         return;
       }
       toast.success("Comment deleted successfully!");
-    } catch (_) {
+    } catch (error) {
+      console.error(error);
       toast.error("An unexpected error occurred");
     }
   };

@@ -59,7 +59,8 @@ export function CommentForm({ postId, user, comment }: CommentFormProps) {
           ? "Comment updated successfully!"
           : "Comment posted successfully!"
       );
-    } catch (_) {
+    } catch (error) {
+      console.error(error);
       toast.error("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
